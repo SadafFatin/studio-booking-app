@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { BookingFormComponent } from '../booking-form/booking-form.component';
 import { MatCardModule} from '@angular/material/card';
@@ -12,9 +12,12 @@ import { MatDivider } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule} from '@angular/material/toolbar';
 import { MatIconModule} from '@angular/material/icon';
-
 import { MatGridListModule} from '@angular/material/grid-list';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { StudioService } from '../service/studio-service';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { calculateDistance } from '../util/util';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @Component({
@@ -22,8 +25,10 @@ import { Router, RouterModule } from '@angular/router';
   standalone: true,
   imports: [MatDialogModule,
     MatCardModule, MatButtonModule, CurrencyPipe, MatInputModule,
-    MatFormField, MatListModule, MatSelectModule,
-    MatDivider, MatToolbarModule,MatIconModule, MatGridListModule,RouterModule],
+    MatFormField, MatListModule, MatSelectModule, MatSnackBarModule,
+    MatDivider, MatToolbarModule,MatIconModule, MatGridListModule,RouterModule,
+    MatProgressSpinnerModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './studio-list.component.html',
   styleUrl: './studio-list.component.scss'
@@ -31,8 +36,8 @@ import { Router, RouterModule } from '@angular/router';
 export class StudioListComponent {
 
 
-selectedRadius = signal(5);
-// Signal for managing the list of studios
+ selectedRadius = signal(50);
+ // Signal for managing the list of studios
  studioList = signal<any[]>([]);
  filteredStudios = signal<any[]>([]);
 
@@ -42,17 +47,18 @@ selectedRadius = signal(5);
 // Signal for managing booking details
  bookingDetails = signal<any>(null);
 
+ studioService = inject(StudioService);
+ private _snackBar = inject(MatSnackBar);
+
+
 constructor(private http: HttpClient, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     // Fetch studio data and update the studioListSignal
-    this.http.get<any[]>('https://gist.githubusercontent.com/rash3dul-islam/88e1565bea2dd1ff9180ff733617a565/raw/684afa147a8e726d7a5e4fdeb390f2d48b35051d/studio-mock-api,json')
-      .subscribe((data: any) => {
+    this.studioService.fetchStudios().subscribe((data:any) => {
         this.studioList.set(data.Studios);
         this.filteredStudios.set(data.Studios);
-        // Set the fetched data to the signal
-        console.log(this.studioList()[10].Images[0]);
-      });
+    });
   }
 
   onSearchChange(event: Event): void {
@@ -79,8 +85,6 @@ constructor(private http: HttpClient, private dialog: MatDialog) {}
     });
   }
 
-
-
   onRadiusSearch(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -92,39 +96,18 @@ constructor(private http: HttpClient, private dialog: MatDialog) {}
           let filteredStudios =  this.studioList().filter(studio => {
             const studioLat = studio.Location.Coordinates.Latitude;
             const studioLon = studio.Location.Coordinates.Longitude;
-            const distance = this.calculateDistance(userLat, userLon, studioLat, studioLon);
+            const distance = calculateDistance(userLat, userLon, studioLat, studioLon);
             return distance <= radius();
            });
            this.filteredStudios.set(filteredStudios);
         },
         (error) => {
           console.error('Error getting geolocation', error);
+          this._snackBar.open(error.message , 'Close');
         }
       );
     }
   }
-
-  calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-    const R = 6371; // km
-    const dLat = this.degreesToRadians(lat2 - lat1);
-    const dLon = this.degreesToRadians(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.degreesToRadians(lat1)) * Math.cos(this.degreesToRadians(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // distance in km
-  }
-
-  degreesToRadians(degrees: number): number {
-    return degrees * Math.PI / 180;
-  }
-
-
-
-
-
-
 
 
 }

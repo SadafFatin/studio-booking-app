@@ -15,10 +15,11 @@ import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [MatFormFieldModule, MatDatepickerModule, MatSelectModule, ReactiveFormsModule, FormsModule,
-    MatToolbarModule, MatIconModule, MatButtonModule, RouterModule, MatListModule, DatePipe,MatAccordion, MatExpansionModule
+  imports: [MatFormFieldModule, MatDatepickerModule, MatSelectModule,
+    MatToolbarModule, MatIconModule, MatButtonModule, RouterModule,
+    MatListModule, DatePipe,MatAccordion, MatExpansionModule
   ],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './booking-list.component.html',
   styleUrl: './booking-list.component.scss'
 })
@@ -28,7 +29,10 @@ export class BookingListComponent {
   bookedStudios: WritableSignal<any[]> = signal([]);
 
   ngOnInit(): void {
-     this.bookings = JSON.parse(localStorage.getItem('booking') || '{}');
-     this.bookedStudios.set(Object.keys(this.bookings));
+     this.bookings.set( localStorage.getItem('booking') ? JSON.parse(localStorage.getItem('booking') || '{}') :  null);
+     if(this.bookings()){
+      this.bookedStudios.set(Object.keys(this.bookings()));
+     }
+     console.log(this.bookings(),this.bookedStudios());
   }
 }

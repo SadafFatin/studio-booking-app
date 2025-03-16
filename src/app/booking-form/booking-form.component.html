@@ -60,27 +60,18 @@
       <mat-label>Available Time: {{ data.studio.Availability.Open }} to {{ data.studio.Availability.Close }}</mat-label>
       <mat-form-field appearance="fill">
         <mat-label>Select Start time</mat-label>
-        <input matInput [matTimepicker]="timeRangepickerFrom" name="fromSlot" ngModel required/>
+        <input matInput [min]="minTime" [max]="maxTime" [matTimepicker]="timeRangepickerFrom" name="fromSlot" ngModel required/>
         <mat-timepicker-toggle matSuffix [for]="timeRangepickerFrom"></mat-timepicker-toggle>
         <mat-timepicker  #timeRangepickerFrom></mat-timepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Select End time</mat-label>
-        <input matInput [matTimepicker]="timeRangepickerTo" name="toSlot" ngModel required/>
+        <input matInput [min]="minTime" [max]="maxTime" [matTimepicker]="timeRangepickerTo" name="toSlot" ngModel required/>
         <mat-timepicker-toggle matSuffix [for]="timeRangepickerTo"></mat-timepicker-toggle>
         <mat-timepicker   #timeRangepickerTo></mat-timepicker>
       </mat-form-field>
 
-
-
-      <!-- <mat-form-field>
-        <mat-select placeholder="Time" name="time" ngModel required>
-          @for(time of data.availableTimes; track $index){
-            <mat-option  [value]="time">{{ time }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field> -->
       <button mat-raised-button type="submit" color="primary">Submit</button>
     </form>
   </mat-card-content>

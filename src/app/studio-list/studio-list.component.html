@@ -37,7 +37,7 @@
   </mat-toolbar>
 
   @defer (when filteredStudios().length > 0) {
-  <h3 style="padding: 2px 14px 0 14px;">Studio List: {{filteredStudios().length}}</h3>
+  <h3 style="padding: 2px 14px 0 14px;">Studios: {{filteredStudios().length}}</h3>
   <mat-divider></mat-divider>
   <div class="container responsive-grid">
     @for (studio of filteredStudios(); track $index) {
@@ -63,8 +63,14 @@
   </div>
   }
   @placeholder {
-  <h3>No data in the list</h3>
+
+  <div class="container" style="display: flex; justify-content: center;">
+    <mat-progress-spinner
+    mode="indeterminate">
+  </mat-progress-spinner>
+  </div>
   }
+
 
 
 </div>

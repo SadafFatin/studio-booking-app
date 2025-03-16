@@ -24,7 +24,7 @@ import {MatIconModule} from '@angular/material/icon';
 export class BookingFormComponent implements OnInit {
 
 
-  previousBooking: any = signal([]);
+  previousBooking: any = [];
   bookings:any = {
 
   }
@@ -38,12 +38,12 @@ export class BookingFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.bookings = JSON.parse(localStorage.getItem('booking') || '{}');
-    this.previousBooking.set( this.bookings[String(this.data.studio.Id)] || []);
+    this.previousBooking = this.bookings[String(this.data.studio.Id)] || [];
   }
 
   ngOnInit(): void {
-    this.minTime= new Date( ); // 8:00 AM
-    this.maxTime = new Date(); // 6:00 PM
+    this.minTime= new Date( );
+    this.maxTime = new Date();
     const openTime = this.data.studio.Availability.Open.split(':').map(Number);
     const closeTime = this.data.studio.Availability.Close.split(':').map(Number);
     this.minTime.setHours(openTime[0], openTime[1], 0, 0);
@@ -70,7 +70,7 @@ export class BookingFormComponent implements OnInit {
       return false;
     }
 
-    if(this.previousBooking().some((booking:any) =>
+    if(this.previousBooking.some((booking:any) =>
       booking.date === date.toISOString() &&
       ((fromSlot.toISOString() >= booking.fromSlot && fromSlot.toISOString() < booking.toSlot) ||
         (toSlot.toISOString() > booking.formSlot && toSlot.toISOString() <= booking.toSlot) ||
@@ -92,8 +92,8 @@ export class BookingFormComponent implements OnInit {
           email: email
         }
     };
-    this.previousBooking().push(bookingData);
-    this.bookings[String(this.data.studio.Id)] = this.previousBooking();
+    this.previousBooking.push(bookingData);
+    this.bookings[String(this.data.studio.Id)] = this.previousBooking;
 
     localStorage.setItem("booking" , JSON.stringify(this.bookings));
     alert('Booking confirmed!');
