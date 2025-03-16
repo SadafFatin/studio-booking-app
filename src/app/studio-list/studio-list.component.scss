@@ -1,0 +1,29 @@
+.studio-card {
+  // max-width: 400px;
+  margin: 4px;
+}
+
+.studio-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.studio-spacer {
+  flex: 1 1 auto;
+}
+
+.studio-image{
+  width: 100%;
+  height: 200px;
+  object-fit:fill;
+}
+
+.container {
+  padding: 24px;
+}
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}

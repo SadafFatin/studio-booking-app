@@ -1,0 +1,70 @@
+<div class="studio-list">
+
+  <mat-toolbar>
+    <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button> -->
+    <mat-toolbar-row>
+      <span>Studio Finder</span>
+      <span class="studio-spacer"></span>
+      <button mat-button  routerLink="/booking-list">
+        Booking List
+
+        <mat-icon>list</mat-icon>
+      </button>
+      <button mat-icon-button >
+        <mat-icon>share</mat-icon>
+      </button>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+      <span>Search bar</span>
+      <span class="studio-spacer"></span>
+      <mat-icon>search</mat-icon>
+      <mat-form-field appearance="fill">
+        <mat-label>Search Studio by Area </mat-label>
+        <input matInput (input)="onSearchChange($event)" [value]="searchTerm()" placeholder="Search by area">
+      </mat-form-field>
+      <mat-icon>near_me</mat-icon>
+      <mat-form-field appearance="fill">
+        <mat-label>Search by Radius</mat-label>
+        <mat-select [(value)]="selectedRadius" (selectionChange)="onRadiusSearch()">
+          <mat-option value="50">50KM</mat-option>
+          <mat-option value="70">70KM</mat-option>
+          <mat-option value="100">100KM</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  @defer (when filteredStudios().length > 0) {
+  <h3 style="padding: 2px 14px 0 14px;">Studio List: {{filteredStudios().length}}</h3>
+  <mat-divider></mat-divider>
+  <div class="container responsive-grid">
+    @for (studio of filteredStudios(); track $index) {
+    <mat-card class="studio-card mat-elevation-z4">
+      <mat-card-header>
+        <!-- <div mat-card-avatar class="studio-header-image" ></div> -->
+        <mat-card-title>{{ studio.Name }}</mat-card-title>
+        <mat-card-subtitle>{{ studio.Type }}</mat-card-subtitle>
+      </mat-card-header>
+      <img class="studio-image" mat-card-image [src]="studio.Images[1]" onerror="this.src='../../assets/studio.jpg'"
+        alt="Photo of a Shiba Inu">
+      <mat-card-content>
+        <h2>{{ studio.Location.Area }}</h2>
+        <h4>{{ studio.Amenities.join(', ') }}</h4>
+        <p> Price per hour: <b>{{ studio.PricePerHour | currency: 'BDT' : '&#2547;' }}</b> </p>
+        <p>Rating: <b>{{ studio.Rating }} ★</b></p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="openBookingForm(studio)">Book Now</button>
+      </mat-card-actions>
+    </mat-card>
+    }
+  </div>
+  }
+  @placeholder {
+  <h3>No data in the list</h3>
+  }
+
+
+</div>

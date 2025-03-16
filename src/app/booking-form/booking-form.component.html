@@ -1,0 +1,87 @@
+<!-- <h2 mat-dialog-title>Book {{ studio.name }}</h2>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Select Date</mat-label>
+    <input matInput [(value)]="date" required>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Select Time Slot</mat-label>
+    <mat-select [(value)]="timeSlot" required>
+      <mat-option *ngFor="let slot of studio.availableSlots" [value]="slot">{{ slot }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Your Name</mat-label>
+    <input matInput [(value)]="userName" required>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Your Email</mat-label>
+    <input matInput [(value)]="userEmail" required>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="bookStudio()">Book Now</button>
+  <button mat-button mat-dialog-close>Cancel</button>
+</div> -->
+
+
+<mat-card>
+  <img class="studio-image" mat-card-image [src]="data.studio.Images[1]" onerror="this.src='../../assets/studio.jpg'" alt="Photo of a Shiba Inu">
+  <mat-card-header>
+    <mat-card-title>{{ data.studio.Name }}</mat-card-title>
+    <mat-card-subtitle>{{ data.studio.Type }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ data.studio.Location.Area }}</p>
+    <p>{{ data.studio.Amenities.join(', ') }}</p>
+
+    <form (ngSubmit)="onSubmit(f)" #f="ngForm"  class="booking-form" >
+      <mat-form-field>
+        <input matInput placeholder="Name" name="name" ngModel required />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Email" name="email" ngModel required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Pick a date" name="date" ngModel required >
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker ></mat-datepicker>
+      </mat-form-field>
+
+
+      <mat-label>Available Time: {{ data.studio.Availability.Open }} to {{ data.studio.Availability.Close }}</mat-label>
+      <mat-form-field appearance="fill">
+        <mat-label>Select Start time</mat-label>
+        <input matInput [matTimepicker]="timeRangepickerFrom" name="fromSlot" ngModel required/>
+        <mat-timepicker-toggle matSuffix [for]="timeRangepickerFrom"></mat-timepicker-toggle>
+        <mat-timepicker  #timeRangepickerFrom></mat-timepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Select End time</mat-label>
+        <input matInput [matTimepicker]="timeRangepickerTo" name="toSlot" ngModel required/>
+        <mat-timepicker-toggle matSuffix [for]="timeRangepickerTo"></mat-timepicker-toggle>
+        <mat-timepicker   #timeRangepickerTo></mat-timepicker>
+      </mat-form-field>
+
+
+
+      <!-- <mat-form-field>
+        <mat-select placeholder="Time" name="time" ngModel required>
+          @for(time of data.availableTimes; track $index){
+            <mat-option  [value]="time">{{ time }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field> -->
+      <button mat-raised-button type="submit" color="primary">Submit</button>
+    </form>
+  </mat-card-content>
+</mat-card>

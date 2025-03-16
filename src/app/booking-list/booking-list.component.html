@@ -1,0 +1,43 @@
+<mat-toolbar>
+  <button  routerLink="/" mat-icon-button >
+    <mat-icon>arrow_back_ios</mat-icon>
+  </button>
+  <span>Booking List</span>
+</mat-toolbar>
+
+<mat-accordion  multi>
+  @for (studio of bookedStudios(); track studio) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header class="studio-headers-align">
+        <mat-panel-title>{{bookings()[studio][0].studio.Name}}</mat-panel-title>
+        <mat-panel-description class="mat-expansion-panel-header-description">
+          Bookings : {{bookings()[studio].length}}
+          <mat-icon>event_upcoming</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-list>
+        @for (booking of bookings()[studio]; track booking) {
+          <mat-list-item>
+            <mat-icon matListItemIcon>camera_indoor</mat-icon>
+             <div matListItemTitle>
+               {{booking.date | date}}  - {{booking.fromSlot | date:'h:mm a'}} to {{booking.toSlot | date:'h:mm a'}}
+             </div>
+            <div matListItemLine>
+              Type: {{booking.studio.Type}}, Location : {{booking.studio.Location.Area}} , {{booking.studio.Location.City}}
+             </div>
+             <div matListItemLine>
+              {{booking.user.name}} - {{booking.user.email}}
+            </div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        }
+      </mat-list>
+
+
+    </mat-expansion-panel>
+
+  }
+
+
+</mat-accordion>
+
